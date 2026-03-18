@@ -10,7 +10,7 @@ function App() {
   });
 
   const [filter, setFilter] = useState('all');
-  const [isDark, setIsDark] = useState(false); // Состояние для темы
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -45,30 +45,52 @@ function App() {
 
   const activeCount = todos.filter(todo => !todo.completed).length;
 
-  // Стили для темной темы
   const themeStyles = {
-    backgroundColor: isDark ? '#333' : '#fff',
-    color: isDark ? '#fff' : '#333',
+    backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9',
+    color: isDark ? '#f0f0f0' : '#333',
     minHeight: '100vh',
-    transition: 'all 0.3s',
-    padding: '20px'
+    transition: 'all 0.3s ease',
+    padding: '40px 20px'
   };
 
   return (
     <div style={themeStyles}>
-      <div style={{ maxWidth: '600px', margin: '0 auto', fontFamily: 'Arial, sans-serif' }}>
+      <div style={{ 
+        maxWidth: '600px', 
+        margin: '0 auto', 
+        fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif',
+        background: isDark ? '#2d2d2d' : '#fff',
+        padding: '30px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+      }}>
         
-        {/* Кнопка переключения темы */}
-        <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+        {/* Шапка: Заголовок и Кнопка темы в один ряд */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '30px'
+        }}>
+          <h1 style={{ margin: 0, fontSize: '24px' }}>Менеджер задач</h1>
           <button 
             onClick={() => setIsDark(!isDark)}
-            style={{ padding: '5px 10px', cursor: 'pointer', borderRadius: '4px' }}
+            style={{ 
+              padding: '8px 12px', 
+              cursor: 'pointer', 
+              borderRadius: '20px',
+              border: '1px solid #ddd',
+              background: isDark ? '#444' : '#eee',
+              color: 'inherit',
+              fontSize: '14px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
           >
-            {isDark ? '☀️ Светлая тема' : '🌙 Темная тема'}
+            {isDark ? '☀️ Light' : '🌙 Dark'}
           </button>
         </div>
-
-        <h1 style={{ textAlign: 'center' }}>Менеджер задач</h1>
         
         <AddTodoForm onAdd={addTodo} />
         
@@ -78,37 +100,42 @@ function App() {
           activeCount={activeCount}
         />
 
-        {filteredTodos.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#999' }}>
-            {filter === 'all' ? 'Задач пока нет' :
-             filter === 'active' ? 'Нет активных задач' : 'Нет выполненных задач'}
-          </p>
-        ) : (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {filteredTodos.map(todo => (
-              <TodoItem
-                key={todo.id}
-                task={todo}
-                onToggle={toggleTodo}
-                onDelete={deleteTodo}
-                onEdit={editTodo} // Передаем функцию редактирования
-              />
-            ))}
-          </ul>
-        )}
+        <div style={{ marginTop: '20px' }}>
+          {filteredTodos.length === 0 ? (
+            <p style={{ textAlign: 'center', color: '#999', fontStyle: 'italic' }}>
+              {filter === 'all' ? 'Список пуст...' :
+               filter === 'active' ? 'Нет активных задач' : 'Выполненных задач нет'}
+            </p>
+          ) : (
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {filteredTodos.map(todo => (
+                <TodoItem
+                  key={todo.id}
+                  task={todo}
+                  onToggle={toggleTodo}
+                  onDelete={deleteTodo}
+                  onEdit={editTodo} 
+                />
+              ))}
+            </ul>
+          )}
+        </div>
 
         {todos.length > 0 && (
           <button
-            onClick={() => setTodos([])}
+            onClick={() => {
+              if(window.confirm('Очистить весь список?')) setTodos([]);
+            }}
             style={{
-              marginTop: '20px',
-              padding: '8px 16px',
-              background: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
+              marginTop: '25px',
+              padding: '10px',
+              background: 'transparent',
+              color: '#ff4444',
+              border: '1px solid #ff4444',
+              borderRadius: '6px',
               cursor: 'pointer',
-              width: '100%'
+              width: '100%',
+              fontWeight: 'bold'
             }}
           >
             Очистить всё
